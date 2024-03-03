@@ -121,7 +121,7 @@ def draw_maze(maze, path=None):
     
     # Preparar para la animación del camino
     if path is not None:
-        line, = ax.plot([], [], color='red', linewidth=2)
+        line, = ax.plot([], [], color='green', linewidth=2)
         
         def init():
             line.set_data([], [])
@@ -145,10 +145,9 @@ def draw_maze(maze, path=None):
 
 # Función principal
 if __name__ == "__main__":
-    filename = input("Ingresa el nombre del archivo .txt con el laberinto: ")
+    filename = "test_maze.txt"
     filename = os.path.join(os.getcwd(), filename)  # Obtener la ruta completa al archivo
     maze = create_maze_from_file(filename)
-
     # Menú de opciones
     print("Selecciona un algoritmo:")
     print("1. Breadth-First Search")
@@ -169,9 +168,7 @@ if __name__ == "__main__":
         depth_limit = int(input("Ingresa el límite de profundidad para Depth-Limited Search: "))
         path = depth_limited_search(maze, depth_limit)
     elif choice == 4:
-        start_position = tuple(np.argwhere(maze == 2)[0])
-        finish_position = tuple(np.argwhere(maze == 3)[0])
-        path = start(maze, start_position, finish_position)
+        start(filename)
     elif choice == 5:
         start = tuple(np.argwhere(maze == 2)[0])
         end = tuple(np.argwhere(maze == 3)[0])
@@ -186,5 +183,5 @@ if __name__ == "__main__":
         print(f"Tiempo de resolución: {elapsed_time:.6f} segundos")
         print(f"Cantidad de pasos: {len(path)}")
         draw_maze(maze, path)
-    else:
+    else:   
         print("No se encontró un camino.")
