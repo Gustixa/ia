@@ -24,8 +24,8 @@ def greedy_bfs(grid, start_node, finish_node):
     if not start_node or not finish_node or start_node == finish_node:
         return False
 
-    unvisited_nodes = []  # open list
-    visited_nodes_in_order = []  # closed list
+    unvisited_nodes = [] 
+    visited_nodes_in_order = []
     start_node.distance = 0
     unvisited_nodes.append(start_node)
 

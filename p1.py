@@ -74,37 +74,6 @@ def depth_limited_search(maze, depth_limit):
                     visited[next_node] = True
                     stack.append((next_node, path + [next_node]))
 
-
-def greedy_best_first_search(maze):
-    start = tuple(np.argwhere(maze == 2)[0])
-    end = tuple(np.argwhere(maze == 3)[0])
-
-    heuristic = lambda x, y: abs(x[0] - y[0]) + abs(x[1] - y[1])  # Distancia Manhattan
-
-    priority_queue = [(heuristic(start, end), start, [])]
-    visited = np.zeros_like(maze, dtype=bool)
-    visited[start] = True
-    while priority_queue:
-        _, node, path = min(priority_queue, key=lambda x: x[0])  # Utilizar min en lugar de pop(0) y sort
-        priority_queue.remove((_, node, path))
-        if node == end:
-            return path + [node]
-        for neighbor in get_neighbors(node, maze):
-            if not visited[neighbor]:
-                visited[neighbor] = True
-                priority_queue.append((heuristic(neighbor, end), neighbor, path + [node]))
-        priority_queue.sort(key=lambda x: x[0])  # Ordenar por la heurística
-
-# Función para obtener vecinos válidos
-def get_neighbors(node, maze):
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    neighbors = []
-    for dx, dy in directions:
-        next_node = (node[0] + dx, node[1] + dy)
-        if 0 <= next_node[0] < maze.shape[0] and 0 <= next_node[1] < maze.shape[1] and maze[next_node] == 1:
-            neighbors.append(next_node)
-    return neighbors
-
 # Función para dibujar el laberinto y el camino
 def draw_maze(maze, path=None):
     fig, ax = plt.subplots(figsize=(10, 10))
