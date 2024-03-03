@@ -4,6 +4,9 @@ import numpy as np
 from queue import Queue
 import os
 import time
+from a_star import astar
+from gbfs import start
+
 
 # Función para crear el laberinto a partir de un archivo
 def create_maze_from_file(filename):
@@ -71,23 +74,19 @@ def depth_limited_search(maze, depth_limit):
                     visited[next_node] = True
                     stack.append((next_node, path + [next_node]))
 
-# Algoritmo Greedy Best-First Search para encontrar el camino más corto
-def greedy_best_first_search(maze, heuristic_type='manhattan'):
+
+def greedy_best_first_search(maze):
     start = tuple(np.argwhere(maze == 2)[0])
     end = tuple(np.argwhere(maze == 3)[0])
 
-    if heuristic_type == 'manhattan':
-        heuristic = lambda x, y: abs(x[0] - y[0]) + abs(x[1] - y[1])  # Distancia Manhattan
-    elif heuristic_type == 'euclidean':
-        heuristic = lambda x, y: np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)  # Distancia Euclidiana
-    else:
-        raise ValueError("Tipo de heurística no válido.")
+    heuristic = lambda x, y: abs(x[0] - y[0]) + abs(x[1] - y[1])  # Distancia Manhattan
 
     priority_queue = [(heuristic(start, end), start, [])]
     visited = np.zeros_like(maze, dtype=bool)
     visited[start] = True
     while priority_queue:
-        _, node, path = priority_queue.pop(0)
+        _, node, path = min(priority_queue, key=lambda x: x[0])  # Utilizar min en lugar de pop(0) y sort
+        priority_queue.remove((_, node, path))
         if node == end:
             return path + [node]
         for neighbor in get_neighbors(node, maze):
@@ -95,34 +94,6 @@ def greedy_best_first_search(maze, heuristic_type='manhattan'):
                 visited[neighbor] = True
                 priority_queue.append((heuristic(neighbor, end), neighbor, path + [node]))
         priority_queue.sort(key=lambda x: x[0])  # Ordenar por la heurística
-
-
-# Algoritmo A* para encontrar el camino más corto
-def a_star_search(maze, heuristic_type='manhattan'):
-    start = tuple(np.argwhere(maze == 2)[0])
-    end = tuple(np.argwhere(maze == 3)[0])
-
-    if heuristic_type == 'manhattan':
-        heuristic = lambda x, y: abs(x[0] - y[0]) + abs(x[1] - y[1])  # Distancia Manhattan
-    elif heuristic_type == 'euclidean':
-        heuristic = lambda x, y: np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)  # Distancia Euclidiana
-    else:
-        raise ValueError("Tipo de heurística no válido.")
-
-    priority_queue = [(heuristic(start, end), 0, start, [])]
-    visited = np.zeros_like(maze, dtype=bool)
-    visited[start] = True
-    while priority_queue:
-        _, cost, node, path = priority_queue.pop(0)
-        if node == end:
-            return path + [node]
-        for neighbor in get_neighbors(node, maze):
-            if not visited[neighbor]:
-                visited[neighbor] = True
-                priority_queue.append((cost + 1 + heuristic(neighbor, end), cost + 1, neighbor, path + [node]))
-        priority_queue.sort(key=lambda x: x[0])  # Ordenar por f(n) = g(n) + h(n)
-
-
 
 # Función para obtener vecinos válidos
 def get_neighbors(node, maze):
@@ -198,9 +169,13 @@ if __name__ == "__main__":
         depth_limit = int(input("Ingresa el límite de profundidad para Depth-Limited Search: "))
         path = depth_limited_search(maze, depth_limit)
     elif choice == 4:
-        path = greedy_best_first_search(maze)
+        start_position = tuple(np.argwhere(maze == 2)[0])
+        finish_position = tuple(np.argwhere(maze == 3)[0])
+        path = start(maze, start_position, finish_position)
     elif choice == 5:
-        path = a_star_search(maze)
+        start = tuple(np.argwhere(maze == 2)[0])
+        end = tuple(np.argwhere(maze == 3)[0])
+        path = astar(maze, start, end)
     else:
         print("Opción no válida. Por favor, selecciona un número del 1 al 5.")
 
