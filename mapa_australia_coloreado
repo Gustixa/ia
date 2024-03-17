@@ -1,0 +1,18 @@
+graph {
+	graph [rankdir=LR]
+	"Western Australia" [fillcolor="#b03a2e" fontcolor=white shape=ellipse style=filled]
+	"Western Australia" -- "Northern Territory" [dir=none]
+	"Western Australia" -- "South Australia" [dir=none]
+	"Northern Territory" [fillcolor="#1b4f72" fontcolor=white shape=ellipse style=filled]
+	"Northern Territory" -- "South Australia" [dir=none]
+	"Northern Territory" -- Queensland [dir=none]
+	"South Australia" [fillcolor="#186a3b" fontcolor=white shape=ellipse style=filled]
+	"South Australia" -- Queensland [dir=none]
+	"South Australia" -- "New South Wales" [dir=none]
+	"South Australia" -- Victoria [dir=none]
+	Queensland [fillcolor="#b03a2e" fontcolor=white shape=ellipse style=filled]
+	Queensland -- "New South Wales" [dir=none]
+	"New South Wales" [fillcolor="#1b4f72" fontcolor=white shape=ellipse style=filled]
+	"New South Wales" -- Victoria [dir=none]
+	Victoria [fillcolor="#b03a2e" fontcolor=white shape=ellipse style=filled]
+}
